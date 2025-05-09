@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class CropPlot : MonoBehaviour
 {
@@ -26,17 +27,44 @@ public class CropPlot : MonoBehaviour
     public int modelListOffset;
     public GameObject[] instantiatedPlants;
 
+    //if the player is in range of the plot
+    public bool inRange;
+
+    public GameObject speechBubblePrefab;
     public FarmManager farmManager;
+
     // Start is called before the first frame update
     void Start()
     {
         growthStage = -1;
         seeded = false;
+        inRange = false;
         position = transform.position;
     }
 
+    void Update()
+    {
+        if (inRange && !seeded && Input.GetKeyDown(KeyCode.E))
+        {
+            farmManager.TogglePlantUI();
+        }
+    }
+
+
+    public void OnTriggerEnter(Collider other)
+    {
+        inRange = true;
+        speechBubblePrefab.SetActive(true);
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        inRange = false;
+        speechBubblePrefab.SetActive(false);
+    }
+
     //sets up various parameters when a crop is planted and instantiates them
-    public void Plant(string name)
+    public void Plant(int item)
     {
         //just returns if something is already planted in this plot
         if (seeded)
@@ -48,17 +76,17 @@ public class CropPlot : MonoBehaviour
         cropName = name;
         growthStage = 0;
 
-        if (cropName == "Carrot")
+        if (item == 0)
         {
             fullGrowthTime = 1;
             modelListOffset = 0;
         }
-        else if (cropName == "Eggplant")
+        else if (item == 1)
         {
             fullGrowthTime = 2;
             modelListOffset = 2;
         }
-        else if (cropName == "Pumpkin")
+        else if (item == 2)
         {
             fullGrowthTime = 2;
             modelListOffset = 5;

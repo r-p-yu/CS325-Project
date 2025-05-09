@@ -11,7 +11,7 @@ public class ButtonTester : MonoBehaviour
     {
         foreach (var plot in plot)
         {
-            plot.Plant("Carrot");
+            plot.Plant(1);
         }
     }
 

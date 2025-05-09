@@ -1,18 +1,34 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Shop : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int[] merchandise;
+    public int[] prices;
+    public GameManager gameManager;
+    public GameObject notEnoughMoneyText;
+
+    public void BuyItem(int index)
     {
-        
+        if(gameManager.money >= prices[index])
+        {
+            gameManager.adjustMoney(-1 * prices[index]);
+            gameManager.AddToInventory(merchandise[index]);
+        }
+
+        else
+        {
+            StartCoroutine(NotEnoughMoney());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator NotEnoughMoney()
     {
-        
+        notEnoughMoneyText.SetActive(true);
+        yield return new WaitForSeconds(1);
+        notEnoughMoneyText.SetActive(false);
     }
 }
