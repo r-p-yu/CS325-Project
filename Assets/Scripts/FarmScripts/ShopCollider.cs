@@ -23,6 +23,7 @@ public class ShopCollider : MonoBehaviour
 
     void Update()
     {
+        //opens the shop UI
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
             ToggleShop();
@@ -41,6 +42,7 @@ public class ShopCollider : MonoBehaviour
         speechBubblePrefab.SetActive(false);
     }
 
+    //opens the shop UI
     public void ToggleShop()
     {
         if (!isActive) 

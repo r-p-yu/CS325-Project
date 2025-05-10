@@ -8,42 +8,46 @@ public class CropPlot : MonoBehaviour
     //growthStage = current stage of growth the crop in this plot is in. -1 if no plant currently growing
     //fullGrowthTime = time it takes for the type of crop planted to fully grow
     //seeded = boolean whether or not something is currently planted
-    public int growthStage;
-    public int fullGrowthTime;
-    public bool seeded;
+    public int growthStage = -1;
+    public int fullGrowthTime = -1;
+    public bool seeded = false;
 
     //position vectors to instantiate the models
     Vector3 position;
     Vector3 xVector = new Vector3(5, 0, 0);
     Vector3 zVector = new Vector3(0, 0, 2.5f);
 
-    //cropName = name of the crop that is planted
+    //cropNum = what crop is planted
     //growthStageModels = holds all of the different models for the plants at various growth stages
     //                    not very modular but I couldn't figure out how to get around it
     //modelListOffset = number of indexes to offset to start the crop at the proper position of the list
     //instantiatesPlants = an array of the currently instantiated plants. Stored for easy deletion after every growth/harvest
-    public string cropName;
+    public int cropNum = -1;
     public GameObject[] growthStageModels;
     public int modelListOffset;
     public GameObject[] instantiatedPlants;
 
     //if the player is in range of the plot
-    public bool inRange;
+    public bool inRange = false;
 
     public GameObject speechBubblePrefab;
     public FarmManager farmManager;
 
+    //position used in other script's start functions so it needs to be set prior 
+    void Awake()
+    {
+        position = transform.position;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        growthStage = -1;
-        seeded = false;
-        inRange = false;
-        position = transform.position;
+        
     }
 
     void Update()
     {
+        //opens the planting UI
         if (inRange && !seeded && Input.GetKeyDown(KeyCode.E))
         {
             farmManager.TogglePlantUI();
@@ -73,7 +77,7 @@ public class CropPlot : MonoBehaviour
         }
 
         seeded = true;
-        cropName = name;
+        cropNum = item;
         growthStage = 0;
 
         if (item == 0)
@@ -142,7 +146,6 @@ public class CropPlot : MonoBehaviour
     {
         foreach (GameObject plant in instantiatedPlants)
         {
-            print(plant);
             Destroy(plant);
         }
     }

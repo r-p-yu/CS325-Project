@@ -11,6 +11,11 @@ public class Shop : MonoBehaviour
     public GameManager gameManager;
     public GameObject notEnoughMoneyText;
 
+    void Start()
+    {
+        gameManager  = FindObjectOfType<GameManager>();
+    }
+
     public void BuyItem(int index)
     {
         if(gameManager.money >= prices[index])
