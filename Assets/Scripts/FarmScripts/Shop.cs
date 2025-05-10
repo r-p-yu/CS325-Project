@@ -10,10 +10,19 @@ public class Shop : MonoBehaviour
     public int[] prices;
     public GameManager gameManager;
     public GameObject notEnoughMoneyText;
+    public TextMeshProUGUI[] shopOwnedTexts;
 
     void Start()
     {
         gameManager  = FindObjectOfType<GameManager>();
+    }
+
+    public void UpdateTexts()
+    {
+        for (int i = 0; i < shopOwnedTexts.Length; i++)
+        {
+            shopOwnedTexts[i].SetText("Owned: " + gameManager.inventory[i]);
+        }
     }
 
     public void BuyItem(int index)
@@ -21,7 +30,8 @@ public class Shop : MonoBehaviour
         if(gameManager.money >= prices[index])
         {
             gameManager.adjustMoney(-1 * prices[index]);
-            gameManager.AddToInventory(merchandise[index]);
+            gameManager.AddToInventory(merchandise[index], 1);
+            UpdateTexts();
         }
 
         else

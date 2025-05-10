@@ -8,9 +8,9 @@ public class CropPlot : MonoBehaviour
     //growthStage = current stage of growth the crop in this plot is in. -1 if no plant currently growing
     //fullGrowthTime = time it takes for the type of crop planted to fully grow
     //seeded = boolean whether or not something is currently planted
-    public int growthStage = -1;
-    public int fullGrowthTime = -1;
-    public bool seeded = false;
+    public int growthStage;
+    public int fullGrowthTime;
+    public bool seeded;
 
     //position vectors to instantiate the models
     Vector3 position;
@@ -22,27 +22,32 @@ public class CropPlot : MonoBehaviour
     //                    not very modular but I couldn't figure out how to get around it
     //modelListOffset = number of indexes to offset to start the crop at the proper position of the list
     //instantiatesPlants = an array of the currently instantiated plants. Stored for easy deletion after every growth/harvest
-    public int cropNum = -1;
+    public int seedNum;
     public GameObject[] growthStageModels;
     public int modelListOffset;
     public GameObject[] instantiatedPlants;
 
     //if the player is in range of the plot
-    public bool inRange = false;
+    public bool inRange;
 
-    public GameObject speechBubblePrefab;
+    public GameObject seedText;
+    public GameObject harvestText;
     public FarmManager farmManager;
 
     //position used in other script's start functions so it needs to be set prior 
     void Awake()
     {
         position = transform.position;
+        growthStage = -1;
+        fullGrowthTime = -1;
+        seedNum = -1;
+        seeded = false;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        inRange = false;
     }
 
     void Update()
@@ -52,32 +57,48 @@ public class CropPlot : MonoBehaviour
         {
             farmManager.TogglePlantUI();
         }
+        //harvests the fully grown crop
+        else if(inRange && seeded && growthStage == fullGrowthTime && Input.GetKeyDown(KeyCode.E))
+        {
+            Harvest();
+        }
     }
 
 
     public void OnTriggerEnter(Collider other)
     {
         inRange = true;
-        speechBubblePrefab.SetActive(true);
+        if (!seeded)
+        {
+            seedText.SetActive(true);
+        }
+        if (seeded && growthStage == fullGrowthTime)
+        {
+            harvestText.SetActive(true);
+        }
+        
     }
 
     public void OnTriggerExit(Collider other)
     {
         inRange = false;
-        speechBubblePrefab.SetActive(false);
+        seedText.SetActive(false);
+        harvestText.SetActive(false);
+
+        
     }
 
     //sets up various parameters when a crop is planted and instantiates them
     public void Plant(int item)
     {
-        //just returns if something is already planted in this plot
+        //if something is already planted here return
         if (seeded)
         {
             return;
         }
-
+      
         seeded = true;
-        cropNum = item;
+        seedNum = item;
         growthStage = 0;
 
         if (item == 0)
@@ -115,10 +136,14 @@ public class CropPlot : MonoBehaviour
 
     public void Harvest()
     {
+        //hard coded item table for now
+        //TODO: make modular/scalable 
+        GameManager.instance.AddToInventory(seedNum + 3, 9);
         seeded = false;
-        DestroyCrops();
-
-        //TODO: give resources
+        seedNum = -1;
+        growthStage = -1;
+        fullGrowthTime = -1;
+        DestroyCrops();   
     }
 
     //returns whether or not something is growing at this plot

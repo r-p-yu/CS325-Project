@@ -20,20 +20,24 @@ public class Tester : MonoBehaviour
         //simulates ending a day
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
-            farmManager.SaveState();
             gameManager.hasDayPassed = true;
+            farmManager.SaveState();        
             SceneManager.LoadScene("TestScene");
         }
         if (inRange && Input.GetKeyDown(KeyCode.R))
         {
             gameManager.adjustMoney(1000);
         }
-        if (inRange && Input.GetKeyDown(KeyCode.F))
+        if(inRange && Input.GetKeyDown(KeyCode.F))
         {
-            print(gameManager.plotContents[0, 0] + " " + gameManager.plotContents[0, 1]);
-            print(gameManager.plotContents[1, 0] + " " + gameManager.plotContents[1, 1]);
-            print(gameManager.plotContents[2, 0] + " " + gameManager.plotContents[2, 1]);
-            print(gameManager.plotContents[3, 0] + " " + gameManager.plotContents[3, 1]);
+            gameManager.ResetJSON();
+        }
+        if(inRange && Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log(farmManager.plots[0].seedNum + " " + farmManager.plots[0].growthStage);
+            Debug.Log(farmManager.plots[1].seedNum + " " + farmManager.plots[1].growthStage);
+            Debug.Log(farmManager.plots[2].seedNum + " " + farmManager.plots[2].growthStage);
+            Debug.Log(farmManager.plots[3].seedNum + " " + farmManager.plots[3].growthStage);
         }
     }
 

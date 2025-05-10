@@ -47,7 +47,8 @@ public class ShopCollider : MonoBehaviour
     {
         if (!isActive) 
         {
-            isActive = true;
+            isActive = true;  
+            shop.UpdateTexts();
             shopUI.SetActive(true);
             //Lock player movement and camera
             playerController.canMove = false;
