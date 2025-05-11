@@ -6,13 +6,18 @@ using UnityEngine.Networking;
 
 public class FarmManager : MonoBehaviour
 {
-    public CropPlot[] plots;
     private GameManager gameManager;
-    public GameObject plantUI;
     public TempPlayerController playerController;
-    public TextMeshProUGUI[] ownedTexts;
 
+    public GameObject plantUI;
     public bool isPlantUIActive;
+
+    public CropPlot[] plots;
+    public TextMeshProUGUI[] cropOwnedTexts;
+
+    public GameObject inventoryUI;
+    public TextMeshProUGUI[] inventoryOwnedTexts;
+    public bool isInventoryUIActive;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +27,7 @@ public class FarmManager : MonoBehaviour
         gameManager.FarmSceneSetUp();
         plantUI.SetActive(false);
         isPlantUIActive = false;
+        isInventoryUIActive = false;
 
         //if re-entering scene after a night, puts crops back to how they were before +1 growth stage
         if (gameManager.hasDayPassed)
@@ -39,6 +45,14 @@ public class FarmManager : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ToggleInventoryUI();
         }
     }
 
@@ -76,11 +90,12 @@ public class FarmManager : MonoBehaviour
     {
         if (!isPlantUIActive)
         {
-            isPlantUIActive = true;           
-            for (int i = 0; i < ownedTexts.Length; i++)
+            for (int i = 0; i < cropOwnedTexts.Length; i++)
             {
-                ownedTexts[i].SetText("Owned: " + gameManager.inventory[i]);
+                Debug.Log("test");
+                cropOwnedTexts[i].SetText("Owned: " + gameManager.inventory[i]);
             }
+            isPlantUIActive = true;           
             plantUI.SetActive(true);
             //Lock player movement and camera
             playerController.canMove = false;
@@ -92,6 +107,31 @@ public class FarmManager : MonoBehaviour
         {
             isPlantUIActive = false;
             plantUI.SetActive(false);
+            playerController.canMove = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    public void ToggleInventoryUI()
+    {
+        if (!isInventoryUIActive)
+        {
+            isInventoryUIActive = true;
+            for(int i = 0; i < inventoryOwnedTexts.Length; i++)
+            {
+                inventoryOwnedTexts[i].SetText("Owned: " + gameManager.inventory[i]);
+            }
+            inventoryUI.SetActive(true);
+            playerController.canMove = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        else
+        {
+            isInventoryUIActive = false;
+            inventoryUI.SetActive(false);
             playerController.canMove = true;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;

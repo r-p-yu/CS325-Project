@@ -34,6 +34,8 @@ public class CropPlot : MonoBehaviour
     public GameObject harvestText;
     public FarmManager farmManager;
 
+    public AudioManager audioManager;
+
     //position used in other script's start functions so it needs to be set prior 
     void Awake()
     {
@@ -116,6 +118,8 @@ public class CropPlot : MonoBehaviour
             fullGrowthTime = 2;
             modelListOffset = 5;
         }
+
+        audioManager.PlayPlantingSound();
 
         InstantiatePlants(modelListOffset);
     }

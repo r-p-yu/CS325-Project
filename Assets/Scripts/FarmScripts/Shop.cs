@@ -11,10 +11,12 @@ public class Shop : MonoBehaviour
     public GameManager gameManager;
     public GameObject notEnoughMoneyText;
     public TextMeshProUGUI[] shopOwnedTexts;
+    public AudioManager audioManager;
 
     void Start()
     {
         gameManager  = FindObjectOfType<GameManager>();
+        audioManager = FindObjectOfType<AudioManager>();
     }
 
     public void UpdateTexts()
@@ -32,6 +34,7 @@ public class Shop : MonoBehaviour
             gameManager.adjustMoney(-1 * prices[index]);
             gameManager.AddToInventory(merchandise[index], 1);
             UpdateTexts();
+            audioManager.PlayPurchaseSound();
         }
 
         else
