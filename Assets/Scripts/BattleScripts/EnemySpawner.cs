@@ -6,7 +6,7 @@ using TMPro;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject enemyPrefab; //GruntPBR
+    public GameObject enemyPrefab; //GruntHP
     public int totalEnemies = 10;
     public float spawnInterval = 2f;
     public float spawnRadius = 20f;
@@ -17,8 +17,8 @@ public class EnemySpawner : MonoBehaviour
     private Transform player;
 
     [Header("Wave Complete Settings")]
-    public Text waveCompleteText; // Already what you're using
-    public float textDisplayTime = 3f; // How long text stays visible
+    public Text waveCompleteText; 
+    public float textDisplayTime = 10f; // How long text stays visible
     private PlayerController playerController; // Reference to player movement script
 
     // Start is called before the first frame update

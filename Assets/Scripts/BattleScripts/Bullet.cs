@@ -4,7 +4,7 @@ public class Bullet : MonoBehaviour
 {
     [Header("Settings")]
     public float speed = 50f;
-    public float lifetime = 5f; // Auto-destroy after 2 seconds
+    public float lifetime = 4f; 
     public int damage = 10;
 
     void Start()
@@ -12,7 +12,6 @@ public class Bullet : MonoBehaviour
         // Automatically destroy bullet after lifetime expires
         Destroy(gameObject, lifetime);
 
-        // Add initial force (alternative to PlayerWeapon controlling velocity)
         GetComponent<Rigidbody>().velocity = transform.forward * speed;
     }
 

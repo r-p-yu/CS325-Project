@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Weapon")]
     public Transform weaponHolder; // Empty GameObject for weapon positioning
-    public GameObject weaponModel; // Your AK74 model
+    public GameObject weaponModel; // weapon/AK74 model
 
     void Start()
     {
@@ -49,9 +49,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        // Get pure camera forward direction (ignore pitch rotation)
-        Vector3 forward = transform.forward; // Use player's forward, not camera's
-        Vector3 right = transform.right;    // Use player's right, not camera's
+        Vector3 forward = transform.forward; 
+        Vector3 right = transform.right;    
 
         forward.y = 0f;
         right.y = 0f;

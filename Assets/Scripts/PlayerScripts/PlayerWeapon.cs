@@ -22,6 +22,5 @@ public class PlayerWeapon : MonoBehaviour
         if (!bulletPrefab || !firePoint) return;
 
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        // Bullet.cs now handles its own movement via Start()
     }
 }
