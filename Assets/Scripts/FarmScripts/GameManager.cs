@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -26,6 +27,14 @@ public class GameManager : MonoBehaviour
     //holds which plots were growing which item and what growth stage they were on
     //row = plot number, col1 = item, col2 = growth stage
     public int[][] plotContents;
+
+    public int playerHealth = 3;
+    private float damageCooldown = 0f;
+    public float invincibilityDuration = 1.5f;
+
+    public GameObject gameOverUI;
+    public Text gameOverText;
+    public float gameOverDelay = 5f;
 
     public bool isInGame = false;
 
@@ -55,6 +64,14 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void Update()
+    {
+        if (damageCooldown > 0f)
+        {
+            damageCooldown -= Time.deltaTime;
         }
     }
 
@@ -109,7 +126,6 @@ public class GameManager : MonoBehaviour
     //updates playerData fields
     public void updatePlayerData()
     {
-        playerData.money = money;
         playerData.inventory = inventory;
         playerData.hasDayPassed = hasDayPassed;
         playerData.plot0 = plotContents[0];
@@ -121,7 +137,6 @@ public class GameManager : MonoBehaviour
     //updates game manager fields from playerdata
     public void LoadFromPlayerData()
     {
-        money = playerData.money;
         inventory = playerData.inventory;
         hasDayPassed = playerData.hasDayPassed;
         plotContents = new int[4][];
@@ -129,7 +144,6 @@ public class GameManager : MonoBehaviour
         plotContents[1] = playerData.plot1;
         plotContents[2] = playerData.plot2;
         plotContents[3] = playerData.plot3; 
-
     }
 
     //sets UI elements in FarmScene 
@@ -144,6 +158,8 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         isInGame = true;
+        money = 150;
+        ResetHealth(3);
     }
 
     //input: item's index in the item table. Not very scalable but works for now 
@@ -163,4 +179,48 @@ public class GameManager : MonoBehaviour
     {
         money += val;
     }
+
+    public void TakeDamage(int amount)
+    {
+        Debug.Log($"Player took {amount} damage. Health now: {playerHealth}");
+        if (damageCooldown > 0f)
+        {
+            return;
+        }
+        playerHealth -= amount;
+        playerHealth = Mathf.Max(playerHealth, 0);
+
+        damageCooldown = invincibilityDuration;
+
+        if (playerHealth <= 0)
+        {
+            StartCoroutine(HandleGameOver());
+        }
+    }
+
+    IEnumerator HandleGameOver()
+    {
+        if (gameOverUI != null)
+        {
+            gameOverUI.SetActive(true);
+        }
+        if (gameOverText != null)
+        {
+            gameOverText.text = "GAME OVER";
+        }
+        yield return new WaitForSeconds(gameOverDelay);
+
+        SceneManager.LoadScene("MainMenuScene"); 
+    }
+
+    public void Heal(int amount)
+    {
+        playerHealth += amount;
+    }
+
+    public void ResetHealth(int value = 3)
+    {
+        playerHealth = value;
+    }
+
 }

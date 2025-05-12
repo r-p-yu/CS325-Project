@@ -7,6 +7,7 @@ public class PlayerData
     //global stuff
     public int money;
     public int[] inventory;
+    public int health;
 
     //farm stuff
     public int[] plot0;

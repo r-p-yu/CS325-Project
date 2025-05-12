@@ -11,7 +11,8 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        player = playerObj.transform;
     }
 
     // Update is called once per frame
@@ -27,4 +28,12 @@ public class Enemy : MonoBehaviour
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
         }
     }
+
+    void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.CompareTag("Player"))
+    {
+        GameManager.instance.TakeDamage(1);
+    }
+}
 }

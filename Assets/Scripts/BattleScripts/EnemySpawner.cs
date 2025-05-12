@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -17,8 +18,10 @@ public class EnemySpawner : MonoBehaviour
     private Transform player;
 
     [Header("Wave Complete Settings")]
-    public Text waveCompleteText; 
-    public float textDisplayTime = 10f; // How long text stays visible
+    public Text waveCompleteText;
+    public TextMeshProUGUI waveSummaryText; 
+    public float textDisplayTime = 7f; // How long text stays visible
+
     private PlayerController playerController; // Reference to player movement script
 
     // Start is called before the first frame update
@@ -85,14 +88,23 @@ public class EnemySpawner : MonoBehaviour
     {
         if (playerController != null) playerController.canMove = false;
 
+        int moneyEarned = enemiesDefeated * 10;
+        GameManager.instance.adjustMoney(moneyEarned);
+
         if (waveCompleteText != null)
         {
             waveCompleteText.text = "WAVE DEFEATED";
             waveCompleteText.gameObject.SetActive(true);
         }
 
+        if (waveSummaryText != null)
+        {
+            waveSummaryText.text = $"You killed {enemiesDefeated} enemies\nand earned {moneyEarned} coins!";
+            waveSummaryText.gameObject.SetActive(true);
+        }
+
         yield return new WaitForSeconds(textDisplayTime);
 
-        if (waveCompleteText != null) waveCompleteText.gameObject.SetActive(false);
+        SceneManager.LoadScene("FarmScene");
     }
 }
