@@ -20,7 +20,7 @@ public class BattleTrigger : MonoBehaviour
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
             farmManager.SaveState();
-            //SceneManager.LoadScene("BattleScene");
+            SceneManager.LoadScene("BattleScene");
         }
     }
 
