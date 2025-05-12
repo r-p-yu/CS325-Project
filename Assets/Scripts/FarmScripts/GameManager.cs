@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public int money;
     public static string[] itemTable = { "Carrot Seeds", "Eggplant Seeds", "Pumpkin Seeds", "Carrots", "Eggplants", "Pumpkins" };
     public int[] inventory;
+    public TextMeshProUGUI moneyText;
 
     public bool hasDayPassed;
 
@@ -26,9 +27,6 @@ public class GameManager : MonoBehaviour
     //row = plot number, col1 = item, col2 = growth stage
     public int[][] plotContents;
 
-    // Weapon system
-    public List<string> weaponTypes = new List<string> { "SMG", "AR", "Heavy Rifle" };
-    public string selectedWeapon;
     public bool isInGame = false;
 
     void Awake()
@@ -138,11 +136,9 @@ public class GameManager : MonoBehaviour
     public void FarmSceneSetUp()
     {
         LoadFromJSON();
-    }
-
-    public void SetWeapon(string weaponName)
-    {
-        selectedWeapon = weaponName;
+        GameObject moneyObj = GameObject.Find("MoneyText");
+        moneyText = moneyObj.GetComponent<TextMeshProUGUI>();
+        moneyText.SetText(money.ToString());
     }
 
     public void StartGame()

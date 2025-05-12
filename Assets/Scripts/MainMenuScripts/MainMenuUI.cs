@@ -5,34 +5,21 @@ using UnityEngine.SceneManagement;
 public class MainMenuUI : MonoBehaviour
 {
     public Button startButton;
-    public Button settingsButton;
+    public Button exitButton;
 
     public GameObject menuCanvas;
-    public GameObject weaponSelectionPanel;
-
-    public Button smgButton;
-    public Button arButton;
-    public Button heavyRifleButton;
-
     public float rotationSpeed = 10f;
     public Transform panoramaRig;
 
     void Start()
     {
-        // Only unlock cursor if we're in the main menu scene
         if (SceneManager.GetActiveScene().name == "MainMenuScene")
         {
             UnlockCursor();
         }
 
         startButton.onClick.AddListener(OnStartClicked);
-        settingsButton.onClick.AddListener(OnSettingsClicked);
-
-        smgButton.onClick.AddListener(() => SelectWeapon("SMG"));
-        arButton.onClick.AddListener(() => SelectWeapon("AR")); 
-        heavyRifleButton.onClick.AddListener(() => SelectWeapon("Heavy Rifle"));
-
-        weaponSelectionPanel.SetActive(false);
+        exitButton.onClick.AddListener(OnExitClicked);
     }
 
     void UnlockCursor()
@@ -55,20 +42,18 @@ public class MainMenuUI : MonoBehaviour
 
     void OnStartClicked()
     {
-        menuCanvas.SetActive(false);
-        weaponSelectionPanel.SetActive(true);
-    }
-
-    void SelectWeapon(string weaponName)
-    {
-        GameManager.instance.SetWeapon(weaponName);
-        GameManager.instance.StartGame();
-        LockCursor(); // Ensure locked before scene change
+        LockCursor();
+        GameManager.instance.StartGame(); // Optional, based on your setup
         SceneManager.LoadScene("FarmScene");
     }
 
-    void OnSettingsClicked()
+    void OnExitClicked()
     {
-        Debug.Log("Settings clicked.");
+        Debug.Log("Exiting game...");
+        Application.Quit();
+
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 }

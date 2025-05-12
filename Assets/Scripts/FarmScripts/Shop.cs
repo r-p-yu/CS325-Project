@@ -33,6 +33,7 @@ public class Shop : MonoBehaviour
         {
             gameManager.adjustMoney(-1 * prices[index]);
             gameManager.AddToInventory(merchandise[index], 1);
+            gameManager.moneyText.SetText(gameManager.money.ToString());
             UpdateTexts();
             audioManager.PlayPurchaseSound();
         }
