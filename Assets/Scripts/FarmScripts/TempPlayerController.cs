@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class TempPlayerController : MonoBehaviour
 {
-    public CharacterController controller;
+    public Rigidbody playerRB;
 
     public float speed = 10f;
     public Transform cameraTransform;
     public float mouseSens = 250f;
     float xRotation = 0f;
-    Vector3 forward;
-    Vector3 right;
     public bool canMove;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<CharacterController>();
+        playerRB = GetComponent<Rigidbody>();
+        playerRB.freezeRotation = true;
         Cursor.lockState = CursorLockMode.Locked;
         canMove = true;
     }
@@ -40,17 +39,17 @@ public class TempPlayerController : MonoBehaviour
             //movement based on camera direction 
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
-            right = cameraTransform.right;
-            forward = cameraTransform.forward;
-
+            
+            Vector3 right = cameraTransform.right;
+            Vector3 forward = cameraTransform.forward;
             forward.y = 0f;
             forward.Normalize();
             right.y = 0f;
             right.Normalize();
 
-            Vector3 moveDirection = forward * vertical + right * horizontal;
-            controller.Move(moveDirection * speed * Time.deltaTime);
+            Vector3 movement = (forward * vertical + right * horizontal) * speed;
+            playerRB.velocity = new Vector3(movement.x, playerRB.velocity.y, movement.z);
+
         }
-        
     }
 }
