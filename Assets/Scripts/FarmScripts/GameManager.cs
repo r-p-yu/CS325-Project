@@ -15,12 +15,11 @@ public class GameManager : MonoBehaviour
 
     //stores player money, inventory, and the item table
     //each index of the player inventory maps to an item on the item table, the value at the index is the quantity
+    // Stores player money, inventory, and the item table
     public int money;
     public static string[] itemTable = { "Carrot Seeds", "Eggplant Seeds", "Pumpkin Seeds", "Carrots", "Eggplants", "Pumpkins" };
     public int[] inventory;
 
-    //flag to set when a day passes
-    //used to know when FarmManager has to grow crops 
     public bool hasDayPassed;
 
     //holds which plots were growing which item and what growth stage they were on
@@ -28,7 +27,16 @@ public class GameManager : MonoBehaviour
     public int[][] plotContents;
     //inventory holds the quantity as elements, index of the elements map to the itemTable 
     //e.g. inventory = {1, 0, 2} means 1 carrot seed, 0 eggplant seed, 2 pumpkin seed, 0 everything else
+    // Plot contents: row = plot number, col1 = item, col2 = growth stage
+    public int[,] plotContents;
+
+    public TextMeshProUGUI[] ownedTexts;
     public TextMeshProUGUI moneyText;
+
+    // Weapon system
+    public List<string> weaponTypes = new List<string> { "SMG", "AR", "Heavy Rifle" };
+    public string selectedWeapon;
+    public bool isInGame = false;
 
     void Awake()
     {
@@ -142,6 +150,52 @@ public class GameManager : MonoBehaviour
             moneyText = GameObject.Find("HUDPanel").GetComponentInChildren<TextMeshProUGUI>();
         }
         moneyText.SetText("" + money);     
+            money = 0;
+            inventory = new int[itemTable.Length];
+            hasDayPassed = false;
+            plotContents = new int[4, 2];
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void SetWeapon(string weaponName)
+    {
+        selectedWeapon = weaponName;
+    }
+
+    public void StartGame()
+    {
+        isInGame = true;
+    }
+
+    public void FarmSceneSetUp()
+    {
+        if (moneyText == null)
+        {
+            moneyText = GameObject.Find("HUDPanel").GetComponentInChildren<TextMeshProUGUI>();
+        }
+        else
+        {
+            moneyText.SetText("" + money);
+        }
+
+        if (ownedTexts[0] == null)
+        {
+            for (int i = 0; i < ownedTexts.Length; i++)
+            {
+                ownedTexts[i] = GameObject.Find("OwnedText" + (i + 1)).GetComponent<TextMeshProUGUI>();
+            }
+        }
+        else
+        {
+            for (int i = 0; i < ownedTexts.Length; i++)
+            {
+                ownedTexts[i].SetText("Owned: " + inventory[i]);
+            }
+        }
     }
 
     //input: item's index in the item table. Not very scalable but works for now 
